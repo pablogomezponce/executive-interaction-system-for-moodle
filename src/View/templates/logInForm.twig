@@ -1,0 +1,39 @@
+<div class="cell large-6">
+    <form>
+        <div class="grid-container">
+            <div class="grid-y grid-padding-y">
+                <div class="medium-6 cell">
+                    <label>eStudy ID
+                        <input id="userUsername" type="text" placeholder="eStudy username">
+                    </label>
+                </div>
+                <div class="medium-6 cell">
+                    <label>Password
+                        <input id="userPassword" type="password" placeholder="password">
+                    </label>
+                </div>
+            </div>
+            <div class="text-center">
+                <button type="button" id="loginButton" name="Login" class="button">Login</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<script>
+    $("#loginButton").on('click', function (evt) {
+        let username = $("#userUsername").val();
+        let password = $("#userPassword").val();
+
+        $.ajax({ url: '/api/login',method:'POST', data: {login: username, password: password}}).done( function (data) {
+            let ans = JSON.parse(data);
+
+            if (ans['status']) {
+                window.location.href = '{{ base_url() }}/profile';
+            } else {
+                alert("ERROR!");
+            }
+        });
+    });
+</script>

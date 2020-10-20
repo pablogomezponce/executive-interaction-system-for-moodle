@@ -1,0 +1,54 @@
+<!--
+Title: The title of the current page (SEO)
+
+Header: It need to include the main navigation menu
+
+Styles: Where all the css files are going to be loaded
+
+Content: Includes the main content of every page
+Footer
+
+Scripts: Where all your .js files are going to be loaded
+-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %} {% endblock %}</title>
+
+    <link rel="stylesheet" href="{{ base_url() }}/assets/reset.css">
+
+    {% block scripts %}
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+        <script src="{{ base_url() }}/assets/js/foundation.js"></script>
+
+    {% endblock %}
+
+    {% block css %}
+    <link rel="stylesheet" href="{{ base_url() }}/assets/css/foundation.css">
+    <link rel="stylesheet" href="{{ base_url() }}/assets/css/eistudy.css">
+    {% endblock %}
+
+</head>
+
+<body>
+{% include 'header.twig' %}
+{% if messages is not empty %}
+<div class = "container">
+    {% for message in messages %}
+        <div class="row card text-center">
+        <div class="alert">
+            {{ message[0] }}
+        </div>
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% block content %} {% endblock %}
+{% block footer %} {% endblock %}
+</body>
+</html>

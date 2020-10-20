@@ -1,0 +1,156 @@
+{% extends "base.html.twig" %}
+
+{% block title %} {{ title }} {% endblock %}
+
+{% block content %}
+    <div class="hide grid-x grid-margin-x" style="min-height: 90vh; margin-top: 2vh; margin-bottom: 2vh; margin-left: 10vh;margin-right: 10vh" id="response-container">
+
+    </div>
+    <form class="width-100 align-center" >
+        <div class="grid-x text-center">
+            <div class="cell">
+                <h2 class="h2">¿Qué indicadores de interacción te interesa conocer?</h2>
+            </div>
+        </div>
+
+        <div class="flex-container" style="justify-content: space-around" id="container-zone">
+        </div>
+
+
+        <div class="text-center padding-1">
+            <button  name="Get details!" class="button">Get details!</button>
+        </div>
+
+
+    </form>
+
+
+    <script>
+
+
+
+        function showResponses(response)
+        {
+            let container = $("#response-container");
+            container.removeClass('hide');
+
+            console.log(container);
+            container[0].innerHTML = '';
+            let vals = Object.entries(response);
+
+            for (let i = 0; i < vals.length; i++) {
+                let widget = document.createElement('DIV');
+                widget.classList.add('card', 'cell', 'medium-6', 'small-6', 'large-4');
+
+                widget.style.width = 300;
+                widget.style.margin = 10;
+
+                let val = vals[i];
+
+                let key = val[0];
+                let content = val[1];
+
+                let widgetTitle = document.createElement('DIV');
+                widgetTitle.classList.add('card-divider');
+                widgetTitle.innerText=key;
+                widget.append(widgetTitle);
+
+                let WidgetContent = document.createElement('DIV');
+                for ( let j = 0; j < content.length; j++ )
+                {
+                    let row = content[j];
+
+                    let text = document.createElement('p');
+                    text.innerText = JSON.stringify(row);
+                    WidgetContent.append(text);
+                }
+
+
+                WidgetContent.style.overflowX = 'scroll';
+                widget.append(WidgetContent);
+                container.append(widget)
+            }
+        }
+
+        function addToSegment(parent, list)
+        {
+            console.log(list)
+            for (let i = 0; i < list.length; i++) {
+                let indicator = list[i];
+                let id = indicator.replace(/ /g, '_');
+
+                let form_button = document.createElement('input');
+                form_button.type = 'checkbox';
+                form_button.classList.add('checkbox', 'indicator_checkbox');
+                form_button.name = indicator;
+                form_button.id = id + '_' + {{ courseid }};
+
+
+                let label = document.createElement('label');
+                label.setAttribute("for", i + '_' + {{ courseid }});
+                label.innerText = indicator;
+                let row = document.createElement('div');
+                row.classList.add('row');
+                row.append(form_button, label);
+                parent.append(row);
+            }
+        }
+
+        let showIndicators = function (val) {
+            let ans = JSON.parse(val);
+            console.log(ans);
+            let individual_indicator_list = ans['Individuales'];
+            let role = ans['role'];
+
+            let indicators = $("#container-zone");
+
+            let professor_indicators = document.createElement('DIV');
+
+            let student_indicators = document.createElement('DIV');
+            let student_title = document.createElement('P');
+            student_title.classList.add('text-center', 'h3');
+            student_title.innerText = 'Indicadores individuales';
+
+            student_indicators.append(student_title);
+
+            addToSegment(student_indicators, individual_indicator_list);
+            indicators.append(student_indicators);
+
+            if (role === 'professor')
+            {
+                let professor_indicator_list = ans['Grupales'];
+
+                let professor_title = document.createElement('P');
+                professor_title.classList.add('text-center', 'h3');
+                professor_title.innerText = 'Indicadores grupales';
+                professor_indicators.append(professor_title);
+
+                addToSegment(professor_indicators, professor_indicator_list);
+                indicators.append(professor_indicators);
+
+            }
+
+        };
+
+        $(document).ready(function() {
+            $("form").submit(function (e) {
+                e.preventDefault();
+
+                let formData = $(this).serializeArray();
+
+                $.post('{{ base_url() }}/api/askIndicators/{{ courseid }}', {queries: formData}, function (ans) {
+                    showResponses(JSON.parse(ans));
+                });
+
+            });
+
+            $.ajax({
+                url: '{{ base_url() }}/api/courses/getIndicators/{{ courseid }}',
+                success: showIndicators,
+                method: 'GET',
+            });
+        })
+
+    </script>
+
+{% endblock %}

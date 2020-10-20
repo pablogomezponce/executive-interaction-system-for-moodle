@@ -1,0 +1,47 @@
+{% extends "base.html.twig" %} {% block title %} {{ title }} {% endblock %}
+
+{% block content %}
+    <div class="grid-y" style="height: 100vh; border: green 25px solid">
+        <div class="grid-x">
+            <div class="cell" style="border: #0a0a0a 1px solid">
+                <h1 class="align-center text-center">Bienvenido a EIStudy</h1>
+            </div>
+        </div>
+        <div class="grid-x">
+            <div class="cell medium-6 large-8" style="border: #0a0a0a 1px solid">
+                <div class="grid-container">
+                <p>EIStudy es una plataforma que te ayuda a ver cómo interactuas con el Moodle universitario.</p>
+                <p>Para iniciar sesión, usa los credenciales de eStudy.</p>
+                </div>
+            </div>
+            <div class="cell medium-6 large-4" style="border: #0a0a0a 1px solid">
+                {% include 'logInForm.twig' %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let ans = '';
+/*        $.post('api/login', {login: 'usuari_14992', password:'$2y$10$rTfy9EErWriDeDugGO0dEuUN//n9sXcYl1oLUhwJF25bcGxfqNJPe'}, function (data) {
+            console.log(data);
+            $.get('api/checkUser','', function (data2) {
+                let ans = JSON.parse(data2);
+                console.log(ans);
+            });
+        });*/
+
+        $.ajax({url:'api/courses/getCourses',
+            onsuccess: function (data) {
+                console.log(data);
+            },
+            method:'GET'}
+        );
+    </script>
+
+{% endblock %}
+
+
+
+{% block footer %}
+    {{ footer }}
+{% endblock %}

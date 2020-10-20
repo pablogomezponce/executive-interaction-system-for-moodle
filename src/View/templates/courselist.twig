@@ -1,0 +1,55 @@
+{% extends "base.html.twig" %} {% block title %} {{ title }} {% endblock %}
+
+{% block content %}
+    <table id="courselist" class="hover stack" style="border: green 25px solid">
+        <thead>
+        <tr>
+            <th>Subject</th>
+            <th>Role</th>
+        </tr>
+        </thead>
+    </table>
+
+    <script>
+        $.ajax({
+            url:'api/courses/getCourses',
+            method:'GET',
+        }).done(function (val) {
+            let ans = JSON.parse(val);
+
+            let courselist = $("#courselist");
+            let tbody = document.createElement("tbody");
+            for (var i in ans)
+            {
+                let row = ans[i];
+                console.log(row)
+                let tr = document.createElement('tr');
+                //rowDiv.classList.add('grid-x');
+                tr.addEventListener("click", () => {window.location.href = '{{ base_url() }}/defineIndicators/'+row['courseid']});
+
+                let subject = document.createElement('td');
+                //subject.classList.add('cell','large-6')
+                subject.innerText = row['name'];
+
+                let role = document.createElement('td');
+                //role.classList.add('cell','large-3')
+                if (row['role'] === 'student') {
+                    role.innerHTML = "<img style='max-width:50px' src='{{ base_url() }}/assets/logos/student_role/student.svg'/>";
+                }
+
+                let id = document.createElement('td');
+                //id.classList.add('cell', 'large-3')
+                id.innerText = row['id'];
+
+
+                tr.append(subject)
+                tr.append(role)
+                tbody.append(tr);
+            }
+
+            courselist.append(tbody);
+
+        });
+    </script>
+
+{% endblock %}
