@@ -34,56 +34,37 @@
     </div>
 
 
+    <script src="{{ base_url() }}/assets/js/widgetLib/widgetlib.js"></script>
 
     <script>
-
+        let widgetList = [];
 
         function showResponses(response) {
+            widgetList = [];
+
             let container = $("#response-container");
             container.removeClass('hide');
 
-            console.log(container);
             container[0].innerHTML = '';
             let vals = Object.entries(response);
 
             for (let i = 0; i < vals.length; i++) {
-                let widget = document.createElement('DIV');
-                widget.classList.add('card');
 
-                widget.style.maxWidth = "300px";
-                widget.style.maxHeight = "300px";
-                widget.style.margin = '10px';
-                widget.style.borderRadius= '50px';
-
+                let widget = new Widget();
                 let val = vals[i];
 
                 let key = val[0];
                 let content = val[1];
 
-                let widgetTitle = document.createElement('DIV');
-                widgetTitle.classList.add('card-divider');
-                widgetTitle.style.justifyContent = 'center';
-                widgetTitle.innerHTML = "<p style='text-align: center'>"+key+"</p>";
+                widget.title = key;
+                widget.schema = content['content'];
+                widget.kind = content['kind'];
+                widget.process();
 
-                widgetTitle.style.textAlign = 'center';
-                widget.append(widgetTitle);
-
-                let WidgetContent = document.createElement('DIV');
-                for (let j = 0; j < content.length; j++) {
-                    let row = content[j];
-
-                    let text = document.createElement('p');
-                    text.style.paddingRight = '25px';
-                    text.style.paddingLeft = '25px';
-                    text.innerText = JSON.stringify(row);
-                    WidgetContent.append(text);
-                }
+                widgetList.push(widget);
 
 
-                WidgetContent.style.overflowX = 'scroll';
-                WidgetContent.style.height = '100%';
-                widget.append(WidgetContent);
-                container.append(widget)
+                container.append(widget.render());
             }
         }
 
