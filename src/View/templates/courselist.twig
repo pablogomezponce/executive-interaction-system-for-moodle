@@ -1,7 +1,25 @@
 {% extends "base.html.twig" %} {% block title %} {{ title }} {% endblock %}
 
 {% block content %}
-    <table id="courselist" class="hover stack" style="border: green 25px solid">
+    <div style="background-color: #4CB2DD; width: 100vw;height: 100vh; flex-direction: column; display: flex;">
+        {% include 'header.twig' %}
+
+        <div class="grid-x" style="margin: 20px">
+            <div class="cell auto"
+                 style="background-color: #FFFFFF;padding: 50px; border-radius: 50px; justify-items: center; display: flex; min-height: 10vh; max-height: 75vh; overflow-y: scroll">
+                <table id="courselist" class="hover stack">
+                    <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Role</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!--<table id="courselist" class="hover stack" style="border: green 25px solid">
         <thead>
         <tr>
             <th>Subject</th>
@@ -9,23 +27,25 @@
         </tr>
         </thead>
     </table>
+    -->
 
     <script>
         $.ajax({
-            url:'api/courses/getCourses',
-            method:'GET',
+            url: 'api/courses/getCourses',
+            method: 'GET',
         }).done(function (val) {
             let ans = JSON.parse(val);
 
             let courselist = $("#courselist");
             let tbody = document.createElement("tbody");
-            for (var i in ans)
-            {
+            for (var i in ans) {
                 let row = ans[i];
                 console.log(row)
                 let tr = document.createElement('tr');
                 //rowDiv.classList.add('grid-x');
-                tr.addEventListener("click", () => {window.location.href = '{{ base_url() }}/defineIndicators/'+row['courseid']});
+                tr.addEventListener("click", () => {
+                    window.location.href = '{{ base_url() }}/defineIndicators/' + row['courseid']
+                });
 
                 let subject = document.createElement('td');
                 //subject.classList.add('cell','large-6')

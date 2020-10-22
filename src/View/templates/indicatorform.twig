@@ -3,34 +3,42 @@
 {% block title %} {{ title }} {% endblock %}
 
 {% block content %}
-    <div class="hide grid-x grid-margin-x" style="min-height: 90vh; margin-top: 2vh; margin-bottom: 2vh; margin-left: 10vh;margin-right: 10vh" id="response-container">
+    <div style="background-color:#4CB2DD; min-height: 100vh; display: flex;flex-direction: column; align-items: center; padding: 10px">
+        {% include 'header.twig' %}
+
+        <div class="flex-container flex-dir-column" style="width: 95%">
+            <div class="hide cell flex-container"
+                 style="background-color: transparent; display: flex; flex-direction: row; flex-wrap: wrap"
+                 id="response-container">
+            </div>
+            <form class="cell align-center" style="background: white;border-radius: 50px;">
+                <div class="grid-x text-center">
+                    <div class="cell">
+                        <h2 class="h2">¿Qué indicadores de interacción te interesa conocer?</h2>
+                    </div>
+                </div>
+
+                <div class="flex-container" style="justify-content: space-around" id="container-zone">
+                </div>
+
+
+                <div class="text-center padding-1">
+                    <button name="Get details!" class="button">Get details!</button>
+                </div>
+
+
+            </form>
+        </div>
+
 
     </div>
-    <form class="width-100 align-center" >
-        <div class="grid-x text-center">
-            <div class="cell">
-                <h2 class="h2">¿Qué indicadores de interacción te interesa conocer?</h2>
-            </div>
-        </div>
 
-        <div class="flex-container" style="justify-content: space-around" id="container-zone">
-        </div>
-
-
-        <div class="text-center padding-1">
-            <button  name="Get details!" class="button">Get details!</button>
-        </div>
-
-
-    </form>
 
 
     <script>
 
 
-
-        function showResponses(response)
-        {
+        function showResponses(response) {
             let container = $("#response-container");
             container.removeClass('hide');
 
@@ -40,10 +48,12 @@
 
             for (let i = 0; i < vals.length; i++) {
                 let widget = document.createElement('DIV');
-                widget.classList.add('card', 'cell', 'medium-6', 'small-6', 'large-4');
+                widget.classList.add('card');
 
-                widget.style.width = 300;
-                widget.style.margin = 10;
+                widget.style.maxWidth = "300px";
+                widget.style.maxHeight = "300px";
+                widget.style.margin = '10px';
+                widget.style.borderRadius= '50px';
 
                 let val = vals[i];
 
@@ -52,28 +62,32 @@
 
                 let widgetTitle = document.createElement('DIV');
                 widgetTitle.classList.add('card-divider');
-                widgetTitle.innerText=key;
+                widgetTitle.style.justifyContent = 'center';
+                widgetTitle.innerHTML = "<p style='text-align: center'>"+key+"</p>";
+
+                widgetTitle.style.textAlign = 'center';
                 widget.append(widgetTitle);
 
                 let WidgetContent = document.createElement('DIV');
-                for ( let j = 0; j < content.length; j++ )
-                {
+                for (let j = 0; j < content.length; j++) {
                     let row = content[j];
 
                     let text = document.createElement('p');
+                    text.style.paddingRight = '25px';
+                    text.style.paddingLeft = '25px';
                     text.innerText = JSON.stringify(row);
                     WidgetContent.append(text);
                 }
 
 
                 WidgetContent.style.overflowX = 'scroll';
+                WidgetContent.style.height = '100%';
                 widget.append(WidgetContent);
                 container.append(widget)
             }
         }
 
-        function addToSegment(parent, list)
-        {
+        function addToSegment(parent, list) {
             console.log(list)
             for (let i = 0; i < list.length; i++) {
                 let indicator = list[i];
@@ -116,8 +130,7 @@
             addToSegment(student_indicators, individual_indicator_list);
             indicators.append(student_indicators);
 
-            if (role === 'professor')
-            {
+            if (role === 'professor') {
                 let professor_indicator_list = ans['Grupales'];
 
                 let professor_title = document.createElement('P');
@@ -132,7 +145,7 @@
 
         };
 
-        $(document).ready(function() {
+        $(document).ready(function () {
             $("form").submit(function (e) {
                 e.preventDefault();
 
