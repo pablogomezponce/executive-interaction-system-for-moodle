@@ -51,7 +51,6 @@ class IndicatorHandler
     {
         $indicators = array();
 
-        $indicators["Total interacciones assignatura"] = self::$grupalTotalInteractions;
         $indicators['Ránking interacciones de la asignatura'] = self::$grupalRankgingInteractions;
         $indicators['Tiempo de margen para modificar entrega de media por alumno'] = self::$grupalAVGTimeToModify;
         $indicators['Cantidad de NP por alumno'] = self::$grupalAmountOfNP;
