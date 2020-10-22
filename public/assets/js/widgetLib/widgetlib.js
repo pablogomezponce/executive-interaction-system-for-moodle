@@ -8,7 +8,9 @@ class Widget {
         this._schema = schema;
         this._style = {
             general: {
-                maxWidth: '300px',
+                maxWidth: '50%',
+                width:'auto',
+                minWidth: '300px',
                 maxHeight: '300px',
                 margin: '10px',
                 borderRadius: '50px',
@@ -20,6 +22,9 @@ class Widget {
                 horizontalPadding: '25px',
                 overflowX: 'scroll',
                 height: '100%',
+                justifyContent: 'center',
+                alignItems: 'center',
+                display: 'flex',
             }
         };
     }
@@ -73,22 +78,29 @@ class Widget {
 
         return "<div class='card' style='max-width: " + this._style.general.maxWidth + ";" +
             " max-height: " + this._style.general.maxHeight + ";" +
-            " margin: "+this._style.general.margin+";" +
-            " border-radius: "+this._style.general.borderRadius+"'>" +
+            " min-width: " +this._style.general.minWidth + ";" +
+            " width: " + this._style.general.width + ";" +
+            " margin: " + this._style.general.margin + ";" +
+            " border-radius: " + this._style.general.borderRadius + "'>" +
             "" +
             "<div class='card-divider'" +
-            "style='justify-content: "+this._style.title.justifyContent+"'" +
+            "style='justify-content: " + this._style.title.justifyContent + "'" +
             ">" +
             "<p style='text-align: center'>" +
             this._title +
             "</p>" +
             "</div>" +
             "" +
-            "<div style='padding-left: "+this._style.content.horizontalPadding+";" +
-            "padding-right: "+this._style.content.horizontalPadding+";" +
-            "padding-bottom:" + this._style.content.horizontalPadding + ";"+
-            "overflow: "+this._style.content.overflowX+";" +
-            "height:"+this._style.content.height+" '>" +
+            "<div style='"+
+            "overflow-x: " + this._style.content.overflowX + ";" +
+            "overflow-y:" + this._style.content.overflowX + ";" +
+            "margin: " + this._style.content.horizontalPadding + ";" +
+            "display: " + this._style.content.display + ";" +
+            "width: calc(100% - (2 * " + this._style.content.horizontalPadding + "));" +
+            "justify-content: "+ this._style.content.justifyContent + ";" +
+            "height: 100%;" +
+            "align-self: center'>" +
+
             this._content +
             "</div>" +
             "" +
@@ -98,14 +110,70 @@ class Widget {
     process() {
         switch (this.kind) {
             case 'COUNTER':
-                console.log(this._schema);
-                if (this._schema.length > 0){
-                    if (this._schema[0].amount){
-                    this.content = this._schema[0].amount;
+                if (this._schema.length > 0) {
+                    if (this._schema[0].amount) {
+                        this.content = "<p style='align-self: center; font-size: 4em'>"+ this._schema[0].amount+"</p>";
                     }
                 } else {
                     this.content = "No hay resultados";
                 }
+                break;
+            case 'LIST':
+                let table = document.createElement('TABLE');
+                if (this._schema.length > 0) {
+
+
+                    let headers = [];
+                    let keys = Object.keys(this._schema[0]);
+
+                    for (let i = 0; i < keys.length; i++) {
+                        let key = keys[i];
+                        let condition = /[^0-9]/;
+                        if (condition.test(key)){
+                            headers.push(key);
+                        }
+                    }
+
+                    console.log(headers);
+
+                    let header = document.createElement('THEAD');
+                    let tr = document.createElement('TR');
+
+                    for (let i = 0; i < headers.length; i++) {
+                        let header = headers[i];
+
+                        let th = document.createElement('TH');
+                        th.innerText = header;
+                        tr.append(th);
+                    }
+                    
+                    let tbody = document.createElement('TBODY');
+
+                    for (let i = 0; i < this._schema.length; i++) {
+                        let row = this._schema[i];
+
+                        let tr = document.createElement('TR');
+
+                        for (let j = 0; j < headers.length; j++) {
+                            let location = headers[j];
+
+                            let td = document.createElement('TD');
+
+                            td.innerText = row[location];
+                            tr.append(td);
+                        }
+
+                        tbody.append(tr);
+                    }
+                    
+                    header.append(tr);
+                    table.append(header);
+                    table.append(tbody);
+
+                }
+
+                this.content = table.outerHTML;
+
                 break;
 
             default:
