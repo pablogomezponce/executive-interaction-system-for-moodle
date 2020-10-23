@@ -1,5 +1,31 @@
-<div class="grid-x" style="background: transparent; width: 100vw;display: flex;justify-content: center">
-    <h1 class="title" id="EIStudy" style="text-align: center">
-        <a href="{{ base_url() }}/profile" style="color: white;text-decoration: underline">EIStudy</a>
-    </h1>
+<div
+     style="background: transparent; width: 100vw;display: grid; grid-template-columns: 10% auto 10%;justify-content: space-around; align-items: center">
+    <span></span>
+    <div style="width: 50vw;">
+        <h1 class="title" id="EIStudy" style="text-align: center">
+            <a href="{{ base_url() }}/profile" style="color: white;text-decoration: underline">EIStudy</a>
+        </h1>
+    </div>
+    <img id="logout-api" alt="logout button" src="{{ base_url() }}/assets/buttons/logout_button.svg"
+         style="height: 3vh;margin-right: 1vw"/>
 </div>
+
+<script>
+    let logout_button = $("#logout-api");
+
+    logout_button.on('click', function (evt) {
+        console.log(evt);
+
+        $.ajax({
+            url: '{{ base_url() }}/api/logout',
+            method: 'POST',
+            success: function (ans) {
+                console.log(ans);
+
+                if (ans === 'out') {
+                    window.location = '{{ base_url() }}';
+                }
+            }
+        })
+    })
+</script>

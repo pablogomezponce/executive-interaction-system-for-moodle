@@ -86,25 +86,20 @@ class userRequirements
         }
     }
 
+    public function logout(RequestInterface $request, ResponseInterface $response, array $args)
+    {
+        session_destroy();
+
+        $response->getBody()->write('out');
+        $response = $response->withStatus(200);
+
+        return $response;
+    }
+
     public function checkUserSession(RequestInterface $request, ResponseInterface $response, array $args)
     {
         $response = $response->withStatus(200);
         $response = $response->getBody()->write(json_encode($_SESSION['user']));
         return $response;
-    }
-
-    public function logout(RequestInterface $request, ResponseInterface $response, array $args)
-    {
-        if(empty($_SESSION['user']))
-        {
-            $response = $response->withStatus(400);
-            $response = $response->getBody()->write(json_encode(array('status'=>false, 'reason'=>'no user signed')));
-            return $response;
-        } else {
-            unset($_SESSION['user']);
-            $response = $response->withStatus(200);
-            $response = $response->getBody()->write(json_encode(array('status'=>true)));
-            return $response;
-        }
     }
 }
