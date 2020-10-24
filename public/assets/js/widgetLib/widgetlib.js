@@ -133,9 +133,7 @@ class Widget {
                             headers.push(key);
                         }
                     }
-
-                    console.log(headers);
-
+                    
                     let header = document.createElement('THEAD');
                     let tr = document.createElement('TR');
 
