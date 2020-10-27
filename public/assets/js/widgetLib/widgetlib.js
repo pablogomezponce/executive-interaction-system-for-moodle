@@ -20,7 +20,7 @@ class Widget {
             },
             content: {
                 horizontalPadding: '25px',
-                overflowX: 'scroll',
+                overflowX: 'auto',
                 height: '100%',
                 justifyContent: 'center',
                 alignItems: 'center',
@@ -92,7 +92,6 @@ class Widget {
             "</div>" +
             "" +
             "<div style='"+
-            "overflow-x: " + this._style.content.overflowX + ";" +
             "overflow-y:" + this._style.content.overflowX + ";" +
             "margin: " + this._style.content.horizontalPadding + ";" +
             "display: " + this._style.content.display + ";" +
@@ -171,7 +170,6 @@ class Widget {
                 }
 
                 this.content = table.outerHTML;
-
                 break;
 
             default:
