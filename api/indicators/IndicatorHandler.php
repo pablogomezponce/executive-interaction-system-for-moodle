@@ -27,12 +27,16 @@ class IndicatorHandler
     private static $individualAmountOfNP =  ['sql' => 'select userid, (select count(id) from mdl_assign where course = %courseid) - count(distinct assignment) as amount from mdl_assign_submission mas where mas.assignment in (select ma2.id from mdl_assign ma2 where course = %courseid) and userid = %userid group by userid;', 'kind' => 'COUNTER'];
     private static $individualResourcesSeen = ['sql' => "select mr.name as 'Nombre del recurso', count(mlsl.id) as 'Veces visto' from mdl_logstore_standard_log mlsl     join mdl_resource mr on mr.id = mlsl.objectid     join mdl_user mu on mu.id = mlsl.userid where courseid = %courseid and component = 'mod_resource' and mlsl.userid = %userid group by userid, name order by name asc;", 'kind' => 'LIST' ];
     private static $individualAmountResourcesSeen = ['sql' => "select count(mlsl.id) as 'amount' from mdl_logstore_standard_log mlsl     join mdl_resource mr on mr.id = mlsl.objectid     join mdl_user mu on mu.id = mlsl.userid where courseid = %courseid and component = 'mod_resource' and mlsl.userid = %userid group by userid;", 'kind' => 'COUNTER'];
+    private static $individualCourseTimesSeenAmount = ['sql' => "select rank() over (order by count(mlsl.id) desc) as '#' ,mu.username as 'Nombre de usuario', count(mlsl.id) as 'amount' from mdl_logstore_standard_log mlsl join mdl_user mu on mu.id = mlsl.userid where courseid = %courseid and mlsl.eventname = '\\\\core\\\\event\\\\course_viewed' and mu.id = %userid group by mu.username order by count(mlsl.id) desc" , 'kind' => 'COUNTER'];
+
+
 
     private static $grupalRankgingInteractions =  ['sql' => 'select ranking.position as "#",mu.username as "Nombre de usuario", ranking.times as "Cantidad de interacciones" from mdl_user mu join ( SELECT userid, count(action) as "times", row_number() over (order by count(action) desc) position FROM mdl_logstore_standard_log mlsl where courseid = %courseid group by userid order by count(action) desc ) ranking on mu.id = ranking.userid','kind' => 'LIST'];
     private static $grupalAVGTimeToModify =  ['sql' => 'select mu.username as "Nombre de usuario",        sec_to_time(avg(time_to_sec(timediff(from_unixtime(ma.duedate), from_unixtime(mas.timemodified))))) as "Tiempo de margen promedio"  from mdl_assign ma          JOIN mdl_assign_submission mas on mas.assignment = ma.id      JOIN mdl_user mu on mu.id = mas.userid where course = %courseid      and ma.duedate - mas.timemodified > 0      and status = "submitted"  group by userid;', 'kind' => 'LIST'];
     private static $grupalAmountOfNP =  ['sql' => 'select mu.username as "Nombre de usuario",        (select count(id) from mdl_assign where course = %courseid) - count(distinct assignment) as "Cantidad de NP" from mdl_assign_submission mas     JOIN mdl_user mu on mu.id = mas.userid where mas.assignment in (select ma2.id from mdl_assign ma2 where course = %courseid) group by userid;', 'kind' => 'LIST'];
     private static $grupalResourcesSeenByStudent = ['sql' => "select mu.username as 'Nombre de usuario', mr.name as 'Nombre del recurso', count(mlsl.id) as 'Veces visto' from mdl_logstore_standard_log mlsl     join mdl_resource mr on mr.id = mlsl.objectid     join mdl_user mu on mu.id = mlsl.userid where courseid = %courseid and component = 'mod_resource' group by userid, name order by userid, name asc;", 'kind' => 'LIST'];
     private static $grupalResourcesSeenTotal = ['sql' => "select row_number() over (order by count(mlsl.id) desc) as '#', mr.name as 'Nombre del recurso', count(mlsl.id) as 'Veces visto' from mdl_logstore_standard_log mlsl     join mdl_resource mr on mr.id = mlsl.objectid     join mdl_user mu on mu.id = mlsl.userid where courseid = %courseid and component = 'mod_resource' group by name order by count(mlsl.id) desc; ", 'kind'=>'LIST'];
+    private static $grupalCourseTimesSeen = ['sql' => "select rank() over (order by count(mlsl.id) desc) as '#' ,mu.username as 'Nombre de usuario', count(mlsl.id) as 'Cantidad de accesos al curso' from mdl_logstore_standard_log mlsl join mdl_user mu on mu.id = mlsl.userid where courseid = %courseid and mlsl.eventname = '\\\\core\\\\event\\\\course_viewed' group by mu.username order by count(mlsl.id) desc" , 'kind' => 'LIST'];
 
     public static $gruposInteracciones = [
         'individual' => 'Individuales',
@@ -49,7 +53,7 @@ class IndicatorHandler
         $indicators['Cantidad de NP'] = self::$individualAmountOfNP;
         $indicators['Glosario de recursos vistos'] = self::$individualResourcesSeen;
         $indicators['Cantidad de recursos vistos'] = self::$individualAmountResourcesSeen;
-
+        $indicators['Cantidad de veces que has visto el curso']= self::$individualCourseTimesSeenAmount;
         return $indicators;
     }
 
@@ -62,6 +66,7 @@ class IndicatorHandler
         $indicators['Cantidad de NP por alumno'] = self::$grupalAmountOfNP;
         $indicators['Lista de recursos vistos por alumno'] = self::$grupalResourcesSeenByStudent;
         $indicators['Ranking de recursos más vistos'] = self::$grupalResourcesSeenTotal;
+        $indicators['Cantidad de accesos al curso'] = self::$grupalCourseTimesSeen;
 
         return $indicators;
     }
