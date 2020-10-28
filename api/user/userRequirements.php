@@ -48,9 +48,15 @@ class userRequirements
 
 
         //Get token
-        $url_token = 'https://estudy.salle.url.edu/login/token.php?username=$username&password=$password&service=moodle_mobile_app';
-        $url_token = str_replace('$username', $username,$url_token);
-        $url_token = str_replace('$password', $password,$url_token);
+        $ch = curl_init();
+        $username = curl_escape($ch, $username);
+        $password = curl_escape($ch, $password);
+        $url_token = "https://estudy.salle.url.edu/login/token.php?username={$username}&password={$password}&service=moodle_mobile_app";
+        curl_setopt($ch, CURLOPT_URL, $url_token);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, $url_token);
+        $token = curl_exec($ch);
+        curl_close($ch);
+
         $token = $this->curl_call($url_token);
         $token = json_decode($token);
 
