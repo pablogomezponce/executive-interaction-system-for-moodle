@@ -35,6 +35,32 @@
         $.ajax({
             url: 'api/courses/getCourses',
             method: 'GET',
+        }).fail(function (err) {
+            console.log(err);
+            let table_cont = $("#table-container");
+            table_cont.empty();
+
+            let container = document.createElement('DIV');
+            container.style.width = '100%';
+            container.style.display = 'flex';
+            container.style.flexDirection = 'column';
+            container.style.alignItems = 'center';
+
+
+            let error = document.createElement('H1');
+            error.style.textAlign = 'center';
+            error.style.width = '100%';
+            error.innerText = err.statusText;
+            container.append(error);
+
+            let redirect = document.createElement('A');
+            redirect.classList.add('button', 'primary');
+            redirect.href = '{{ base_url() }}';
+            redirect.innerText = "Head to login!";
+            container.append(redirect);
+
+            table_cont.append(container);
+
         }).done(function (val) {
             let ans = JSON.parse(val);
 
