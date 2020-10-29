@@ -1,20 +1,22 @@
 {% extends "base.html.twig" %} {% block title %} {{ title }} {% endblock %}
 
 {% block content %}
-    <div style="background-color: #4CB2DD; width: 100vw;height: 100vh; flex-direction: column; display: flex;">
+    <div style="background-color: #4CB2DD; width: 100vw;height: 100vh; flex-direction: column; display: flex;overflow: scroll">
         {% include 'header.twig' %}
 
-        <div class="grid-x" style="margin: 20px">
-            <div class="cell auto"
-                 style="background-color: #FFFFFF;padding: 50px; border-radius: 50px; justify-items: center; display: flex; min-height: 10vh; max-height: 75vh; overflow-y: scroll">
-                <table id="courselist" class="hover stack">
-                    <thead>
-                    <tr>
-                        <th>Subject</th>
-                        <th>Role</th>
-                    </tr>
-                    </thead>
-                </table>
+        <div class="grid-x" style="margin: 20px; align-self: center">
+            <div id="table-container"
+                 style="background-color: #FFFFFF;padding: 50px; border-radius: 50px; justify-items: center; display: flex; min-height: 10vh; max-height: 75vh">
+                <div style="overflow: auto; width: 100% ">
+                    <table id="courselist" class="hover">
+                        <thead>
+                        <tr>
+                            <th>Asignatura</th>
+                            <th>Rol</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
