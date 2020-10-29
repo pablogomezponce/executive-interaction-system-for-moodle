@@ -9,7 +9,7 @@ class Widget {
         this._style = {
             general: {
                 maxWidth: '50%',
-                width:'auto',
+                width: 'auto',
                 minWidth: '300px',
                 maxHeight: '300px',
                 margin: '10px',
@@ -78,7 +78,7 @@ class Widget {
 
         return "<div class='card' style='max-width: " + this._style.general.maxWidth + ";" +
             " max-height: " + this._style.general.maxHeight + ";" +
-            " min-width: " +this._style.general.minWidth + ";" +
+            " min-width: " + this._style.general.minWidth + ";" +
             " width: " + this._style.general.width + ";" +
             " margin: " + this._style.general.margin + ";" +
             " border-radius: " + this._style.general.borderRadius + "'>" +
@@ -91,12 +91,12 @@ class Widget {
             "</p>" +
             "</div>" +
             "" +
-            "<div style='"+
+            "<div style='" +
             "overflow-y:" + this._style.content.overflowX + ";" +
             "margin: " + this._style.content.horizontalPadding + ";" +
             "display: " + this._style.content.display + ";" +
             "width: calc(100% - (2 * " + this._style.content.horizontalPadding + "));" +
-            "justify-content: "+ this._style.content.justifyContent + ";" +
+            "justify-content: " + this._style.content.justifyContent + ";" +
             "height: 100%;" +
             "align-self: center'>" +
 
@@ -107,32 +107,32 @@ class Widget {
     }
 
     process() {
+        console.log(this);
+
         switch (this.kind) {
             case 'COUNTER':
                 if (this._schema.length > 0) {
-                    if (this._schema[0].amount) {
-                        this.content = "<p style='align-self: center; font-size: 4em'>"+ this._schema[0].amount+"</p>";
-                    }
-                } else {
-                    this.content = "No hay resultados";
+                    this.content = "<p class='stat' style='align-self: center; font-size: 4em'>" + this._schema[0].amount + "</p>";
+                } else if(this._schema.length === 0) {
+                    this.content = "<p class='stat' style='align-self: center; font-size: 3em'>No hay resultados</p>";
                 }
                 break;
-            case 'LIST':
+            case
+            'LIST'
+            :
                 let table = document.createElement('TABLE');
                 if (this._schema.length > 0) {
-
-
                     let headers = [];
                     let keys = Object.keys(this._schema[0]);
 
                     for (let i = 0; i < keys.length; i++) {
                         let key = keys[i];
                         let condition = /[^0-9]/;
-                        if (condition.test(key)){
+                        if (condition.test(key)) {
                             headers.push(key);
                         }
                     }
-                    
+
                     let header = document.createElement('THEAD');
                     let tr = document.createElement('TR');
 
@@ -143,7 +143,7 @@ class Widget {
                         th.innerText = header;
                         tr.append(th);
                     }
-                    
+
                     let tbody = document.createElement('TBODY');
 
                     for (let i = 0; i < this._schema.length; i++) {
@@ -162,14 +162,15 @@ class Widget {
 
                         tbody.append(tr);
                     }
-                    
+
                     header.append(tr);
                     table.append(header);
                     table.append(tbody);
 
+                    this.content = table.outerHTML;
+                } else if(this._schema.length === 0) {
+                    this.content = "<p class='stat' style='align-self: center; font-size: 2em'>No hay resultados</p>";
                 }
-
-                this.content = table.outerHTML;
                 break;
 
             default:
