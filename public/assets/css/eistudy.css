@@ -1,3 +1,9 @@
 h1.title{
     color: white;
 }
+span:lang(ca) {
+    display: none;
+}
+span:lang(en) {
+    display: none;
+}
