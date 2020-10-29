@@ -24,8 +24,8 @@ class loggedMiddleware
             $response = $next($request, $response);
             return $response;
         }
-        $response->getBody()->write(json_encode(array('status'=>false, 'reason'=>'Session not started, login first')));
-
+        //$response->getBody()->write(json_encode(array('status'=>false, 'reason'=>'Session not started, login first')));
+        $response = $response->withStatus(400, 'Session not started, login first!');
         return $response;
     }
 }
