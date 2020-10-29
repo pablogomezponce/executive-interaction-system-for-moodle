@@ -11,23 +11,26 @@
                  style="background-color: transparent; display: flex; flex-direction: row; flex-wrap: wrap"
                  id="response-container">
             </div>
-            <form class="cell align-center" style="background: white;border-radius: 50px;">
-                <div class="grid-x text-center">
-                    <div class="cell">
-                        <h2 class="h2">¿Qué indicadores de interacción te interesa conocer?</h2>
+            <div id="container-indicators" style="background: white;border-radius: 50px;">
+                <form class="cell align-center" >
+                    <div class="grid-x text-center">
+                        <div class="cell">
+                            <h2 class="h2">¿Qué indicadores de interacción te interesa conocer?</h2>
+                        </div>
                     </div>
-                </div>
 
-                <div class="flex-container" style="justify-content: space-around" id="container-zone">
-                </div>
-
-
-                <div class="text-center padding-1">
-                    <button name="Get details!" class="button">Get details!</button>
-                </div>
+                    <div class="flex-container" style="justify-content: space-around" id="container-zone">
+                    </div>
 
 
-            </form>
+                    <div class="text-center padding-1">
+                        <button name="Get details!" class="button">Get details!</button>
+                    </div>
+
+
+                </form>
+            </div>
+
         </div>
 
 
@@ -142,6 +145,30 @@
                 url: '{{ base_url() }}/api/courses/getIndicators/{{ courseid }}',
                 success: showIndicators,
                 method: 'GET',
+            }).fail(function (err) {
+                let table_cont = $("#container-indicators");
+                table_cont.empty();
+
+                let container = document.createElement('DIV');
+                container.style.width = '100%';
+                container.style.display = 'flex';
+                container.style.flexDirection = 'column';
+                container.style.alignItems = 'center';
+
+
+                let error = document.createElement('H1');
+                error.style.textAlign = 'center';
+                error.style.width = '100%';
+                error.innerText = err.statusText;
+                container.append(error);
+
+                let redirect = document.createElement('A');
+                redirect.classList.add('button', 'primary');
+                redirect.href = '{{ base_url() }}';
+                redirect.innerText = "Head to login!";
+                container.append(redirect);
+
+                table_cont.append(container);
             });
         })
 
