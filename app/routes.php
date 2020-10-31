@@ -28,7 +28,8 @@ $app->get('/api/courses/getCourses', \API\courses\courseExtraction::class.':getC
     ->add(\API\loggedMiddleware::class);
 $app->get('/api/courses/getIndicators/{courseid}', \API\courses\courseExtraction::class.':getCourseIndicators')
     ->add(\API\loggedMiddleware::class);
-
+$app->get('/api/courses/details/{courseid}', \API\courses\courseExtraction::class.':getCourseDetails')
+    ->add(\API\loggedMiddleware::class);
 
     //Indicators
 $app->post('/api/askIndicators/{courseid}', \API\indicators\IndicatorHandler::class . ':extractIndicators');

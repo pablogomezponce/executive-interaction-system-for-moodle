@@ -75,4 +75,17 @@ class courseExtraction
         $response = $response->getBody()->write(json_encode($params));
         return $response;
     }
+
+    public function getCourseDetails(RequestInterface $request, ResponseInterface $response, array $args)
+    {
+        if (isset($_SESSION['courseList'][$args['courseid']]))
+        {
+            $response = $response->getBody()->write(json_encode($_SESSION['courseList'][$args['courseid']]));
+        } else {
+            $response = $response->withStatus(400, 'You are not allowed to see that');
+        }
+
+        return $response;
+
+    }
 }
