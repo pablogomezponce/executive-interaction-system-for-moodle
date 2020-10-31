@@ -105,13 +105,32 @@ class IndicatorHandler
         return $ans;
     }
 
+    private function dictionaryOfCapableOperations(string $courseid)
+    {
+        if (isset($_SESSION['courseList'][$courseid])) {
+            switch ($_SESSION['courseList'][$courseid]['role']) {
+                case 'student':
+                    return self::getIndividualIndicators();
+                case 'teacher':
+                    return self::getAllIndicators();
+                default:
+                    return [];
+            }
+        } else {
+            return [];
+        }
+    }
+
     public function extractIndicators(RequestInterface $request, ResponseInterface $response, array $args)
     {
         $queries_array = $_POST['queries'];
         $courseid = $args['courseid'];
         $responseArray = array();
 
-        $allIndicators = self::getAllIndicators();
+
+
+        $allIndicators = $this->dictionaryOfCapableOperations($courseid);
+
         foreach ($queries_array as $item) {
             $query = $this->findKey($allIndicators, $item['name'])[$item['name']];
 
