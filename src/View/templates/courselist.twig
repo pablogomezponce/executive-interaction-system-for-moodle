@@ -1,12 +1,20 @@
 {% extends "base.html.twig" %} {% block title %} {{ title }} {% endblock %}
 
 {% block content %}
-    <div style="background-color: #4CB2DD; width: 100vw;height: 100vh; flex-direction: column; display: flex;overflow: scroll">
+    <div style="background-color: #4CB2DD; width: 100vw;height: 100vh; flex-direction: column; display: flex">
         {% include 'header.twig' %}
 
-        <div class="grid-x" style="margin: 20px; align-self: center">
+
+
+        <div class="grid-y" style="margin: 20px; align-self: center">
+
+            <div style="background-color: #FFFFFF;padding-left: 20px; padding-right: 20px;margin-bottom: 20px; border-radius: 50px; justify-items: center; display: flex; flex-direction: column">
+                <h1 class="h1" style="text-align: center">Lista de cursos</h1>
+            </div>
+
+
             <div id="table-container"
-                 style="background-color: #FFFFFF;padding: 50px; border-radius: 50px; justify-items: center; display: flex; min-height: 10vh; max-height: 75vh">
+                 style=" background-color: #FFFFFF;padding: 50px; border-radius: 50px; justify-items: center; display: flex; flex-direction: column; min-height: 10vh; max-height: 75vh">
                 <div style="overflow: auto; width: 100% ">
                     <table id="courselist" class="hover">
                         <thead>

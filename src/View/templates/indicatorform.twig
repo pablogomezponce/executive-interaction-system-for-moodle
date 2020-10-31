@@ -3,15 +3,23 @@
 {% block title %} {{ title }} {% endblock %}
 
 {% block content %}
-    <div style="background-color:#4CB2DD; min-height: 100vh; display: flex;flex-direction: column; align-items: center; padding: 10px;overflow: scroll">
+    <div style="background-color:#4CB2DD; min-height: 100vh; display: flex;flex-direction: column; align-items: center; padding: 10px">
         {% include 'header.twig' %}
 
+
+
         <div class="flex-container flex-dir-column" style="width: 95%">
+
+            <div id="title" style="align-self: center; text-align: center;background: white;border-radius: 50px; align-items: center; margin-bottom: 20px;margin-top: 10px;padding-left: 50px; padding-right: 50px">
+
+            </div>
+
             <div class="hide cell flex-container"
-                 style="background-color: transparent; display: flex; flex-direction: row; flex-wrap: wrap"
+                 style="background-color: transparent; display: flex; flex-direction: row; flex-wrap: wrap; margin-bottom: 20px"
                  id="response-container">
             </div>
-            <div id="container-indicators" style="background: white;border-radius: 50px;">
+            <div id="container-indicators" style="background: white;border-radius: 50px; align-items: center">
+
                 <form class="cell align-center" >
                     <div class="grid-x text-center">
                         <div class="cell">
@@ -140,6 +148,42 @@
                 });
 
             });
+
+            $.ajax({
+                url:'{{ base_url() }}/api/courses/details/{{ courseid }}',
+                method: 'GET',
+            }).done(function (ans)
+            {
+                ans = JSON.parse(ans);
+
+                let container = document.createElement("DIV");
+                container.style.display = 'flex';
+                container.style.flexDirection = 'row';
+                container.style.justifyContent = 'center';
+                container.style.width = '100%';
+
+
+
+                let title = document.createElement('H1');
+                title.classList.add('h1');
+                title.innerHTML = ans['name'];
+
+                container.append(title);
+
+                if (ans.role === 'student') {
+                    let role = document.createElement("IMG");
+                    role.src = '{{ base_url() }}/assets/logos/student_role/student.svg';
+                    role.style.width='3vw';
+                    role.alt = 'student';
+                    role.style.marginLeft = '5px';
+                    role.style.marginRight = '5px';
+
+                    container.append(role);
+                }
+
+
+                $("#title").append(container);
+            })
 
             $.ajax({
                 url: '{{ base_url() }}/api/courses/getIndicators/{{ courseid }}',

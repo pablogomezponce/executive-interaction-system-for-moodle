@@ -2,7 +2,7 @@
 
 {% block content %}
 
-    <div style="height: 100vh; background-color: #4CB2DD;overflow: scroll">
+    <div style="height: 100vh; background-color: #4CB2DD">
         <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%">
             <h1 style="color: white">EIStudy</h1>
             <div class="grid-x grid-margin-x" style="width: 83%; align-items: center">
@@ -10,14 +10,23 @@
                     <h2>Mira como interactúas con <strong>campus virtual!</strong></h2>
                 </div>
                 <div class="cell medium-6 large-6 grid-x hide-for-small-only"
-                     style="background-color: #FFFFFF; border-radius: 50px; min-height: 300px; max-height: 400px; height: 60%">
+                     style="background-color: #FFFFFF; border-radius: 50px; height: 60%; min-height: 300px; max-height: 400px; padding: 50px; display: flex; flex-direction: column ; justify-content: space-around">
                     <div class="row" style="padding: 50px">
                         <h2>Describimos como usas tu <strong>campus virtual</strong></h2>
                     </div>
                 </div>
-                <div class="cell medium-6 large-6 small-12"
-                     style="background-color: #FFFFFF; height: 60%; border-radius: 50px; min-height: 300px; max-height: 400px; padding: 50px; display: flex; flex-direction: column ; justify-content: space-around">
-                    {% include 'logInForm.twig' %}
+
+
+                <div class="cell medium-6 large-6 small-12 grid-y"
+                     style="height: 60%; min-height: 300px; max-height: 400px; padding: 50px; display: flex; flex-direction: column ; justify-content: space-around">
+
+                    <div style="background-color: #FFFFFF; border-radius: 50px; margin-bottom: 20px; text-align: center">
+                        <h2 class="h2">Inicia sesión</h2>
+                    </div>
+
+                    <div style="background-color: #FFFFFF; border-radius: 50px">
+                        {% include 'logInForm.twig' %}
+                    </div>
                 </div>
             </div>
         </div>
