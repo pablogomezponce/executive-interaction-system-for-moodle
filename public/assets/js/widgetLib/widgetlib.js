@@ -107,8 +107,6 @@ class Widget {
     }
 
     process() {
-        console.log(this);
-
         switch (this.kind) {
             case 'COUNTER':
                 if (this._schema.length > 0) {
@@ -117,9 +115,7 @@ class Widget {
                     this.content = "<p class='stat' style='align-self: center; font-size: 3em'>No hay resultados</p>";
                 }
                 break;
-            case
-            'LIST'
-            :
+            case 'LIST':
                 let table = document.createElement('TABLE');
                 if (this._schema.length > 0) {
                     let headers = [];
