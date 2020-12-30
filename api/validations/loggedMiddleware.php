@@ -1,7 +1,7 @@
 <?php
 
 
-namespace API;
+namespace API\validations;
 
 
 use Psr\Container\ContainerInterface;
