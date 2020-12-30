@@ -13,8 +13,15 @@
             <div id="title" style="align-self: center; text-align: center;background: white;border-radius: 50px; align-items: center; margin-bottom: 20px;margin-top: 10px;padding-left: 50px; padding-right: 50px">
 
             </div>
-
-            <div class="hide cell flex-container"
+            <div class="card"  id="waiting-answer-text" style="display: none; align-self: center; width:50%; border-radius: 20px">
+                <div class="card-divider">
+                    <h5 style="width: 100%; text-align: center">Loading responses...</h5>
+                </div>
+                <div style="display:flex; flex-direction:column; align-content: center; align-items: center; width: 100%; align-self: center">
+                    <img style="align-self: center; width: 25%" src="{{ base_url() }}/assets/loading/loading.gif"/>
+                </div>
+            </div>
+            <div class="hide cell"
                  style="background-color: transparent; display: flex; flex-direction: row; flex-wrap: wrap; margin-bottom: 20px"
                  id="response-container">
             </div>
@@ -51,12 +58,13 @@
         let widgetList = [];
 
         function showResponses(response) {
-            widgetList = [];
+
 
             let container = $("#response-container");
             container.removeClass('hide');
 
-            container[0].innerHTML = '';
+            widgetList = [];
+
             let vals = Object.entries(response);
 
             for (let i = 0; i < vals.length; i++) {
@@ -143,9 +151,28 @@
 
                 let formData = $(this).serializeArray();
 
-                $.post('{{ base_url() }}/api/askIndicators/{{ courseid }}', {queries: formData}, function (ans) {
+                $.ajax('{{ base_url() }}/api/askIndicators/{{ courseid }}', {
+                    method: 'POST',
+                    data:{queries: formData},
+                    beforeSend: function () {
+                        $('#response-container').removeClass('hide');
+                        $('#response-container').children().remove();
+
+                        $('#waiting-answer-text').show();
+
+                    },
+                    success: function (ans) {
+                        showResponses(JSON.parse(ans));
+                    },
+                    complete: function () {
+                        $('#waiting-answer-text').hide();
+
+                    }
+                })
+
+                /*$.post('{{ base_url() }}/api/askIndicators/{{ courseid }}', {queries: formData}, function (ans) {
                     showResponses(JSON.parse(ans));
-                });
+                });*/
 
             });
 
