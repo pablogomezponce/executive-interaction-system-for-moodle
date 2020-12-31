@@ -21,6 +21,5 @@ class ProfileController
     public function __invoke(RequestInterface $request, ResponseInterface $response, array $args)
     {
         return $this->container->get('view')->render($response, 'courselist.twig');
-
     }
 }

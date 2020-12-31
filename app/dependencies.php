@@ -1,8 +1,5 @@
 <?php
 
-use Slim\Flash\Messages;
-
-
 $container = $app->getContainer();
 
 $container['view'] = function ($c) {
@@ -18,14 +15,11 @@ $container['view'] = function ($c) {
     return $view;
 };
 
-$container['flash'] = function () {
-    return new Messages();
-};
 
 $container['sql'] = function () {
 
     $dbSettings = array(
-        'address' =>"192.168.1.138",
+        'address' =>"192.168.1.101:3306",
         'dbname' => "tfg",
         'userNameDB' => "root",
         'passwordDB' => "oikioiki1998J@",

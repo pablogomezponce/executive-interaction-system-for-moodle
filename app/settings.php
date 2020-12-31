@@ -1,6 +1,6 @@
 <?php
 
 return ['settings' => [
-    'displayErrorDetails' => true, //Mostrar els errors :)
+    'displayErrorDetails' => true, //Mostrar els errors
 ], ];
 
