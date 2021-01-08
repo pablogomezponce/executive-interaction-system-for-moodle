@@ -21,13 +21,7 @@ class userRequirements
 
     public function curl_call (string $url)
     {
-        //Get token
-
-
-
         $handle = curl_init();
-
-
         // Set the url
         curl_setopt($handle, CURLOPT_URL, $url);
         // Set the result output to be a string.
@@ -41,7 +35,7 @@ class userRequirements
 
     }
 
-    public function login (RequestInterface $request, ResponseInterface $response, array $args)
+    public function login(RequestInterface $request, ResponseInterface $response, array $args)
     {
         $username = $_POST['login'];
         $password = $_POST['password'];
@@ -52,11 +46,6 @@ class userRequirements
         $username = curl_escape($ch, $username);
         $password = curl_escape($ch, $password);
         $url_token = "https://estudy.salle.url.edu/login/token.php?username={$username}&password={$password}&service=moodle_mobile_app";
-        curl_setopt($ch, CURLOPT_URL, $url_token);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, $url_token);
-        $token = curl_exec($ch);
-        curl_close($ch);
-
         $token = $this->curl_call($url_token);
         $token = json_decode($token);
 

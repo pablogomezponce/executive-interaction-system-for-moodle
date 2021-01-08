@@ -41,8 +41,8 @@ class IndicatorHandler
     private static $grupalURLSeenPerUser = ['sql' => "SELECT mu.username as 'Nombre de usuario' ,name as 'Nombre del enlace', count(mlsl.id) as 'Cantidad de veces visto' FROM url murl     join logstore mlsl on mlsl.courseid = murl.course and component = 'mod_url' and murl.id = mlsl.objectid     join mdl_user mu on mu.id = mlsl.userid WHERE course = %courseid and action = 'viewed' group by username, name;", 'kind' => 'LIST'];
 
     public static $gruposInteracciones = [
-        'individual' => 'Individuales',
-        'grupal' => 'Grupales',
+        'individual' => 'Indicadores Individuales',
+        'grupal' => 'Indicadores de Grupo',
     ];
 
     public function getCourseIndicators(RequestInterface $request, ResponseInterface $response, array $args)
@@ -54,7 +54,7 @@ class IndicatorHandler
         {
             $params['role'] = 'student';
             $params[IndicatorHandler::$gruposInteracciones['individual']] = array_keys($this->indicators[IndicatorHandler::$gruposInteracciones['individual']]);
-        } else {
+        } else if(!is_null($course) && $course['role'] === 'professor') {
             $params['role'] = 'professor';
             $params[IndicatorHandler::$gruposInteracciones['grupal']] = (array_keys($this->indicators[IndicatorHandler::$gruposInteracciones['grupal']]));
             $params[IndicatorHandler::$gruposInteracciones['individual']] = array_keys($this->indicators[IndicatorHandler::$gruposInteracciones['individual']]);
@@ -104,7 +104,6 @@ class IndicatorHandler
 
         $indicators[self::$gruposInteracciones['individual']] = self::getIndividualIndicators();
         $indicators[self::$gruposInteracciones['grupal']] = self::getGrupalIndicators();
-
         return $indicators;
     }
 
@@ -131,7 +130,7 @@ class IndicatorHandler
         if (isset($_SESSION['courseList'][$courseid])) {
             switch ($_SESSION['courseList'][$courseid]['role']) {
                 case 'student':
-                    return self::getIndividualIndicators();
+                    return [self::getIndividualIndicators()];
                 case 'teacher':
                     return self::getAllIndicators();
                 default:

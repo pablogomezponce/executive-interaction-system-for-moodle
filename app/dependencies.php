@@ -20,11 +20,13 @@ $container['sql'] = function () {
 
     $dbSettings = array(
         'address' =>"192.168.1.101:3306",
-        'dbname' => "tfg",
-        'userNameDB' => "root",
+        'dbname' => "eistudy",
+        'userNameDB' => "eistudyuser",
         'passwordDB' => "oikioiki1998J@",
     );
 
     return $dbSettings;
 };
+
+
 

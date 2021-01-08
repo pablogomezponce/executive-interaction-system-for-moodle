@@ -1,3 +1,6 @@
+
+//const Widget = require('../jsmla/js/class/widget');
+
 class Widget {
 
     constructor(title, content, kind, schema) {
@@ -167,6 +170,10 @@ class Widget {
                 } else if(this._schema.length === 0) {
                     this.content = "<p class='stat' style='align-self: center; font-size: 2em'>No hay resultados</p>";
                 }
+                break;
+
+            case 'JSMLA':
+                let ans = new Widget(1, );
                 break;
 
             default:

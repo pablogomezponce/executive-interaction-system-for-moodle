@@ -112,34 +112,27 @@
 
         let showIndicators = function (val) {
             let ans = JSON.parse(val);
-            console.log(ans);
-            let individual_indicator_list = ans['Individuales'];
+
+            let keys = Object.keys(ans);
             let role = ans['role'];
+            let container = $("#container-zone");
+            for(let i = 0; i < keys.length; i++){
 
-            let indicators = $("#container-zone");
+                let key = keys[i];
+                console.log(key)
+                if (key !== 'role') {
+                    let list = ans[key];
 
-            let professor_indicators = document.createElement('DIV');
+                    let indicators = document.createElement('DIV');
+                    let indicators_title = document.createElement('P');
+                    indicators_title.classList.add('text-center', 'h3');
+                    indicators_title.innerText = key;
+                    indicators.append(indicators_title);
 
-            let student_indicators = document.createElement('DIV');
-            let student_title = document.createElement('P');
-            student_title.classList.add('text-center', 'h3');
-            student_title.innerText = 'Indicadores individuales';
+                    addToSegment(indicators, list);
+                    container.append(indicators);
 
-            student_indicators.append(student_title);
-
-            addToSegment(student_indicators, individual_indicator_list);
-            indicators.append(student_indicators);
-
-            if (role === 'professor') {
-                let professor_indicator_list = ans['Grupales'];
-
-                let professor_title = document.createElement('P');
-                professor_title.classList.add('text-center', 'h3');
-                professor_title.innerText = 'Indicadores grupales';
-                professor_indicators.append(professor_title);
-
-                addToSegment(professor_indicators, professor_indicator_list);
-                indicators.append(professor_indicators);
+                }
 
             }
 
@@ -151,7 +144,7 @@
 
                 let formData = $(this).serializeArray();
 
-                $.ajax('{{ base_url() }}/api/askIndicators/{{ courseid }}', {
+                $.ajax('{{ base_url() }}/api/indicators/operateIndicators/{{ courseid }}', {
                     method: 'POST',
                     data:{queries: formData},
                     beforeSend: function () {
@@ -213,7 +206,7 @@
             })
 
             $.ajax({
-                url: '{{ base_url() }}/api/courses/getIndicators/{{ courseid }}',
+                url: '{{ base_url() }}/api/indicators/getIndicators/{{ courseid }}',
                 success: showIndicators,
                 method: 'GET',
             }).fail(function (err) {
