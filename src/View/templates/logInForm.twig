@@ -37,13 +37,8 @@
         $.ajax({ url: '/api/login',method:'POST', data: {login: username, password: password}})
             .done( function (data) {
             let ans = JSON.parse(data);
-
-            if (ans['status']) {
-                window.location.href = '{{ base_url() }}/profile';
-            } else {
-                $("#errorField").show(200);
-            }
-        });
+            window.location.href = '{{ base_url() }}/profile';
+        }).fail(() => {$("#errorField").show(200);});
     });
 
     /*$("#loginButton").on('click', function (evt) {
