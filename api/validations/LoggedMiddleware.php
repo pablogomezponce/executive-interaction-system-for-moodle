@@ -8,7 +8,13 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-class loggedMiddleware
+/**
+ * Class LoggedMiddleware+
+ * This class is a middleware defined to prevent calls to the API when there is no session started. This middleware
+ * enables the statfulness for the API.
+ * @package API\validations
+ */
+class LoggedMiddleware
 {
     private ContainerInterface $container;
 
@@ -24,8 +30,9 @@ class loggedMiddleware
             $response = $next($request, $response);
             return $response;
         }
+        header("Content-Type: text/html;charset=utf-8");
         //$response->getBody()->write(json_encode(array('status'=>false, 'reason'=>'Session not started, login first')));
-        $response = $response->withStatus(400, 'Session not started, login first!');
+        $response = $response->withStatus(400,  'Debes acceder a tu cuenta');
         return $response;
     }
 }

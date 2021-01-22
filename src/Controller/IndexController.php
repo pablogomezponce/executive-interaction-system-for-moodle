@@ -10,7 +10,7 @@ class IndexController
 {
     /** @var ContainerInterface */
     private $container;
-
+    private $sql;
     /**
      * HelloController constructor.
      * @param ContainerInterface $container

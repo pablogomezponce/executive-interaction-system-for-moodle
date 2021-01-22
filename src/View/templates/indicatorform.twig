@@ -5,9 +5,6 @@
 {% block content %}
     <div style="background-color:#4CB2DD; min-height: 100vh; display: flex;flex-direction: column; align-items: center; padding: 10px">
         {% include 'header.twig' %}
-
-
-
         <div class="flex-container flex-dir-column" style="width: 95%">
 
             <div id="title" style="align-self: center; text-align: center;background: white;border-radius: 50px; align-items: center; margin-bottom: 20px;margin-top: 10px;padding-left: 50px; padding-right: 50px">
@@ -15,7 +12,7 @@
             </div>
             <div class="card"  id="waiting-answer-text" style="display: none; align-self: center; width:50%; border-radius: 20px">
                 <div class="card-divider">
-                    <h5 style="width: 100%; text-align: center">Loading responses...</h5>
+                    <h5 style="width: 100%; text-align: center">Extrayendo datos...</h5>
                 </div>
                 <div style="display:flex; flex-direction:column; align-content: center; align-items: center; width: 100%; align-self: center">
                     <img style="align-self: center; width: 25%" src="{{ base_url() }}/assets/loading/loading.gif"/>
@@ -88,7 +85,6 @@
         }
 
         function addToSegment(parent, list) {
-            console.log(list)
             for (let i = 0; i < list.length; i++) {
                 let indicator = list[i];
                 let id = indicator.replace(/ /g, '_');
@@ -97,11 +93,11 @@
                 form_button.type = 'checkbox';
                 form_button.classList.add('checkbox', 'indicator_checkbox');
                 form_button.name = indicator;
-                form_button.id = id + '_' + {{ courseid }};
+                form_button.id = indicator;
 
 
                 let label = document.createElement('label');
-                label.setAttribute("for", i + '_' + {{ courseid }});
+                label.setAttribute("for", indicator);
                 label.innerText = indicator;
                 let row = document.createElement('div');
                 row.classList.add('row');
@@ -151,14 +147,14 @@
                         $('#response-container').removeClass('hide');
                         $('#response-container').children().remove();
 
-                        $('#waiting-answer-text').show();
+                        $('#waiting-answer-text').show(200);
 
                     },
                     success: function (ans) {
                         showResponses(JSON.parse(ans));
                     },
                     complete: function () {
-                        $('#waiting-answer-text').hide();
+                        $('#waiting-answer-text').hide(200);
 
                     }
                 })
@@ -175,7 +171,7 @@
             }).done(function (ans)
             {
                 ans = JSON.parse(ans);
-
+                console.log(ans)
                 let container = document.createElement("DIV");
                 container.style.display = 'flex';
                 container.style.flexDirection = 'row';
@@ -186,21 +182,12 @@
 
                 let title = document.createElement('H1');
                 title.classList.add('h1');
-                title.innerHTML = ans['name'];
+                title.innerHTML = ans['fullname'];
+                let documentTitle = document.createElement('div');
+                documentTitle.innerHTML = ans['fullname'];
+                document.title = documentTitle.childNodes[1].innerText + ' | EIStudy';
 
                 container.append(title);
-
-                if (ans.role === 'student') {
-                    let role = document.createElement("IMG");
-                    role.src = '{{ base_url() }}/assets/logos/student_role/student.svg';
-                    role.style.width='3vw';
-                    role.alt = 'student';
-                    role.style.marginLeft = '5px';
-                    role.style.marginRight = '5px';
-
-                    container.append(role);
-                }
-
 
                 $("#title").append(container);
             })
@@ -229,7 +216,7 @@
                 let redirect = document.createElement('A');
                 redirect.classList.add('button', 'primary');
                 redirect.href = '{{ base_url() }}';
-                redirect.innerText = "Head to login!";
+                redirect.innerText = "Volver a inicio";
                 container.append(redirect);
 
                 table_cont.append(container);

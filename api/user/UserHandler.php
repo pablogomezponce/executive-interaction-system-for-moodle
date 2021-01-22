@@ -4,13 +4,25 @@
 namespace API\user;
 
 
+use API\courses\CourseHandler;
 use http\Env\Response;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-class userRequirements
+/**
+ * Class UserHandler
+ * This class contains all information related to a Moodle User-
+ * In order to log in, it calls moodle_mobile_app service to verify if the account is valid. If it's valid, basic information is stored in a server session.
+ * If a user logs out, the API destroys the session, in case it was defined.
+ *
+ * This class is the starting point to use the API if there is an attempt to log in.
+ * @package API\user
+ */
+class UserHandler
 {
+    private ContainerInterface $container;
+    private \PDO $sql;
 
     public function __construct(ContainerInterface $c)
     {
@@ -19,7 +31,8 @@ class userRequirements
         $this->sql = new \PDO('mysql:host='. $dbSettings['address'] . ';dbname=' . $dbSettings['dbname'], $dbSettings['userNameDB'], $dbSettings['passwordDB']);
     }
 
-    public function curl_call (string $url)
+
+    private function curl_call (string $url)
     {
         $handle = curl_init();
         // Set the url
@@ -35,6 +48,13 @@ class userRequirements
 
     }
 
+    /**
+     * Store data related to a user from Moodle
+     * @param RequestInterface $request
+     * @param ResponseInterface $response
+     * @param array $args
+     * @return ResponseInterface
+     */
     public function login(RequestInterface $request, ResponseInterface $response, array $args)
     {
         $username = $_POST['login'];
@@ -52,7 +72,7 @@ class userRequirements
         if (!$token || isset($token->error))
         {
             $response = $response->withStatus(400);
-            $response = $response->getBody()->write(json_encode(array('status'=> false, 'reason'=>'No user with said password found')));
+            $response->getBody()->write(json_encode(array('status'=> false, 'reason'=>'No user with said password found')));
             return $response;
         }
         else {
@@ -73,6 +93,7 @@ class userRequirements
                 );
 
                 $_SESSION['user'] = $user;
+                CourseHandler::addCoursesToSession($this->container);
 
 
                 $response = $response->withStatus(200);
@@ -81,9 +102,18 @@ class userRequirements
         }
     }
 
+    /**
+     * Destroys the information related to the user on server.
+     * @param RequestInterface $request
+     * @param ResponseInterface $response
+     * @param array $args
+     * @return ResponseInterface
+     */
     public function logout(RequestInterface $request, ResponseInterface $response, array $args)
     {
-        session_destroy();
+        if(session_status() == PHP_SESSION_ACTIVE){
+            session_destroy();
+        }
 
         $response->getBody()->write('out');
         $response = $response->withStatus(200);
@@ -91,6 +121,13 @@ class userRequirements
         return $response;
     }
 
+    /**
+     * Returns information from the session stored.
+     * @param RequestInterface $request
+     * @param ResponseInterface $response
+     * @param array $args
+     * @return int
+     */
     public function checkUserSession(RequestInterface $request, ResponseInterface $response, array $args)
     {
         $response = $response->withStatus(200);

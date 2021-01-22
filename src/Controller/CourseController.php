@@ -8,7 +8,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-class ProfileController
+class CourseController
 {
 
     private $container;
@@ -20,6 +20,6 @@ class ProfileController
 
     public function __invoke(RequestInterface $request, ResponseInterface $response, array $args)
     {
-        return $this->container->get('view')->render($response, 'courselist.twig');
+        return $this->container->get('view')->render($response, 'courselist.twig', ['title' => 'Asignaturas | Eistudy']);
     }
 }

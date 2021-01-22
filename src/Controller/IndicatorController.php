@@ -23,7 +23,7 @@ class IndicatorController
 
     public function defineParams(RequestInterface $request, ResponseInterface $response, array $args)
     {
-        $params = array('courseid'=>$args['courseid']);
+        $params = array('courseid'=>$args['courseid'], 'title'=>'Extraer indicadores | EIStudy');
         return $this->container->get('view')->render($response, 'indicatorform.twig',$params);
     }
 }

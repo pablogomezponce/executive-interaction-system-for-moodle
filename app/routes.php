@@ -7,7 +7,7 @@ $app->get('/', function () use ($app) {
 });
 
 //LOGIN
-$app->get('/profile', \TFG\Controller\ProfileController::class);
+$app->get('/profile', \TFG\Controller\CourseController::class);
 //INDICATORS
 $app->get('/defineIndicators/{courseid}', \TFG\Controller\IndicatorController::class . ':defineParams');
 
@@ -16,17 +16,17 @@ $app->get('/defineIndicators/{courseid}', \TFG\Controller\IndicatorController::c
 //API
 
     //user
-$app->post('/api/login', \API\user\userRequirements::class.':login');
-$app->get('/api/checkUser', \API\user\userRequirements::class . ':checkUserSession');
-$app->post('/api/logout', \API\user\userRequirements::class . ':logout');
+$app->post('/api/login', \API\user\UserHandler::class.':login');
+$app->get('/api/checkUser', \API\user\UserHandler::class . ':checkUserSession');
+$app->post('/api/logout', \API\user\UserHandler::class . ':logout');
 
     //content
-$app->get('/api/courses/getCourses', \API\courses\courseExtraction::class.':getCourses')
-    ->add(\API\validations\loggedMiddleware::class);
-$app->get('/api/courses/details/{courseid}', \API\courses\courseExtraction::class.':getCourseDetails')
-    ->add(\API\validations\loggedMiddleware::class);
+$app->get('/api/courses/getCourses', \API\courses\CourseHandler::class.':getCourses')
+    ->add(\API\validations\LoggedMiddleware::class);
+$app->get('/api/courses/details/{courseid}', \API\courses\CourseHandler::class.':getCourseDetails')
+    ->add(\API\validations\LoggedMiddleware::class);
 
     //Indicators
 $app->post('/api/indicators/operateIndicators/{courseid}', \API\indicators\IndicatorHandler::class . ':extractIndicators');
 $app->get('/api/indicators/getIndicators/{courseid}', \API\indicators\IndicatorHandler::class.':getCourseIndicators')
-    ->add(\API\validations\loggedMiddleware::class);
+    ->add(\API\validations\LoggedMiddleware::class);

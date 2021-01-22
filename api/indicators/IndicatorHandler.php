@@ -4,16 +4,27 @@
 namespace API\indicators;
 
 
+use API\validations\LoggedMiddleware;
+use http\Env\Response;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
+/**
+ * This class contains the operations towards the target database to extract data.
+ * Class IndicatorHandler
+ * @package API\indicators
+ */
 class IndicatorHandler
 {
 
     private ContainerInterface $container;
     private \PDO $sql;
 
+    /**
+     * IndicatorHandler constructor. Depends on Slim Container.
+     * @param ContainerInterface $c
+     */
     public function __construct(ContainerInterface $c)
     {
         $this->container = $c;
@@ -45,19 +56,29 @@ class IndicatorHandler
         'grupal' => 'Indicadores de Grupo',
     ];
 
+    /**
+     * Offer a list of operations for each role.
+     * @param RequestInterface $request
+     * @param ResponseInterface $response
+     * @param array $args
+     * @return int
+     */
     public function getCourseIndicators(RequestInterface $request, ResponseInterface $response, array $args)
     {
         $course = $_SESSION['courseList'][$args['courseid']];
-
         $params = array();
         if (!is_null($course) && $course['role'] === 'student')
         {
             $params['role'] = 'student';
             $params[IndicatorHandler::$gruposInteracciones['individual']] = array_keys($this->indicators[IndicatorHandler::$gruposInteracciones['individual']]);
-        } else if(!is_null($course) && $course['role'] === 'professor') {
-            $params['role'] = 'professor';
+        } else if (!is_null($course) && $course['role'] === 'teacher'){
+            $params['role'] = 'teacher';
             $params[IndicatorHandler::$gruposInteracciones['grupal']] = (array_keys($this->indicators[IndicatorHandler::$gruposInteracciones['grupal']]));
             $params[IndicatorHandler::$gruposInteracciones['individual']] = array_keys($this->indicators[IndicatorHandler::$gruposInteracciones['individual']]);
+        } else {
+            $params['¡Alerta! No estás relacionado con esta asignatura'] = '';
+            $response = $response->withStatus(400,'No hay registros tuyos en esta asignatura');
+            return $response;
         }
 
         $response = $response->withStatus(200);
@@ -65,6 +86,10 @@ class IndicatorHandler
         return $response;
     }
 
+    /**
+     * List of operations a student can extract.
+     * @return array
+     */
     public static function getIndividualIndicators()
     {
         $indicators = array();
@@ -81,6 +106,10 @@ class IndicatorHandler
         return $indicators;
     }
 
+    /**
+     * List of operations that affect a whole class.
+     * @return array
+     */
     public static function getGrupalIndicators()
     {
         $indicators = array();
@@ -97,6 +126,10 @@ class IndicatorHandler
         return $indicators;
     }
 
+    /**
+     * Combination of operations
+     * @return array
+     */
     public static function getAllIndicators()
     {
 
@@ -141,6 +174,13 @@ class IndicatorHandler
         }
     }
 
+    /**
+     * Processes petitions of operations and returns them.
+     * @param RequestInterface $request
+     * @param ResponseInterface $response
+     * @param array $args
+     * @return int
+     */
     public function extractIndicators(RequestInterface $request, ResponseInterface $response, array $args)
     {
         $queries_array = $_POST['queries'];
