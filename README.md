@@ -6,7 +6,8 @@ Cliente y API que permiten, una vez desplegados, extraer datos sobre la interacc
 
 Este proyecto está configurado para validar la información de sesión con los credenciales de [eStudy](https://estudy.salle.url.edu/). Si no se desea modificar los credenciales, se deben realizar los siguientes pasos:
 
-1. Ejecutar eistudy_views.sql ubicado en `scripts_to_install/eistudy_views.sql`. Se debe substituir el origen de los datos a partir de la línea 7, incluida. `origin. --> %nombre_bbdd_origen`.
+1. Instalar dependencias mediante composer. `composer update`.
+2. Ejecutar eistudy_views.sql ubicado en `scripts_to_install/eistudy_views.sql`. Se debe substituir el origen de los datos a partir de la línea 7, incluida. `origin. --> %nombre_bbdd_origen`.
 2. Ejecutar eistudy_user_creation.sql ubicado en `scripts_to_install/eistudy_user_creation.sql`. Descomentar y substituir contraseña.
 3. Modificar credenciales en `app/dependencies.php`; en el bloque de líneas desde 22 hasta 25.
 4. Iniciar el servidor y acceder a la dirección conveniente (si se ha empleado la imagen de Docker ofrecida, se debe acceder a [localhost](localhost) o [127.0.0.1](127.0.0.1)).
